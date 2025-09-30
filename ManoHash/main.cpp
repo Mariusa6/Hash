@@ -8,6 +8,8 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 struct byt32 {
     uint8_t byte[32];
@@ -66,16 +68,28 @@ std::string intToHex(byt32 number) {
     return ss.str();
 }
     
-int main() {
+int main(int argc, char* argv[]) {
+    std::istream* input;
+    std::ifstream file;
+    std::string sinput, output;
 
-    std::string input, output;
-    std::cout << "Enter a number: ";
-    getline(std::cin, input);
+    if (argc > 1) {
+        file.open(argv[1]);
+        if (!file) {
+            std::cerr << "Nepavyko atidaryti failo: " << argv[1] << "\n";
+            return 1;
+        }
+        input = &file;
+    } else {
+        std::cout << "Įveskite duomenis: ";
+        input = &std::cin;
+    }
 
-    byt32 hash = hashFunction(input);
+    std::getline(*input, sinput);
+
+    byt32 hash = hashFunction(sinput);
     output = intToHex(hash);
 
     std::cout << "Hash: " << output << std::endl;
-
     return 0;
 }
