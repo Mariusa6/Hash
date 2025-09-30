@@ -16,6 +16,8 @@ struct byt32 {
 byt32 hashFunction(std::string input) {
     byt32 hash = {};
 
+    std::string bitwise = input;
+
     // Convert string characters into unsigned integers
     std::vector<unsigned int> seed_data(input.begin(), input.end());
 
@@ -28,17 +30,28 @@ byt32 hashFunction(std::string input) {
     // Shuffle string reproducibly
     std::shuffle(input.begin(), input.end(), rng);
 
-    std::cout << "Shuffled input: " << input << std::endl;
+    // std::cout << "Shuffled input: " << input << std::endl;
+
+    for(char c : input) {
+        for(char& b : bitwise) {
+            b ^= c;
+        }
+        for(char& b : bitwise) {
+            b = (b*c ^ (b+c));
+        }
+    }
+
+    // std::cout << "Bitwise XOR result: " << bitwise << std::endl;
 
     int product = 1;
-    for (char c : input) {
+    for (char c : bitwise) {
         product *= c;
     }
     srand(product);
 
     for (int i = 0; i < 32; ++i) {
         hash.byte[i] = rand();
-        for (char c : input) {
+        for (char c : bitwise) {
             hash.byte[i] += rand();
         }
     }
@@ -57,7 +70,7 @@ int main() {
 
     std::string input, output;
     std::cout << "Enter a number: ";
-    std::cin >> input;
+    getline(std::cin, input);
 
     byt32 hash = hashFunction(input);
     output = intToHex(hash);
