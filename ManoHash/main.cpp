@@ -51,12 +51,12 @@ byt32 hashFunction(std::string input) {
     }
     srand(product);
 
+    int length = bitwise.length();
+
     for (int i = 0; i < 32; ++i) {
-        hash.byte[i] = rand();
-        for (char c : bitwise) {
-            hash.byte[i] += rand();
-        }
+        hash.byte[i] = static_cast<uint8_t>((rand() ^ (length * (i + 1))) % 256);
     }
+
     return hash;
 }
 
