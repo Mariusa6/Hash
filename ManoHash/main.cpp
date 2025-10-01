@@ -23,8 +23,19 @@ int main(int argc, char* argv[]) {
 
     std::getline(*input, sinput);
 
+    // Get starting timepoint
+    auto start = std::chrono::high_resolution_clock::now();
+
     output = hashFunction(sinput);
 
+    // Get ending timepoint
+    auto end = std::chrono::high_resolution_clock::now();
+
+    // Calculate the duration in milliseconds
+    std::chrono::duration<double, std::milli> duration = end - start;
+
     std::cout << "Hash: " << output << std::endl;
+    
+    std::cout << "Hashing time: " << duration.count() << " ms" << std::endl;
     return 0;
 }
